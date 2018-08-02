@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="DragView" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IJQ-gA-xr8">
+                                <rect key="frame" x="62.5" y="241" width="250" height="185"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mte-0F-yH6" customClass="DragView" customModule="DragView" customModuleProvider="target">
+                                        <rect key="frame" x="100" y="55" width="50" height="50"/>
+                                        <color key="backgroundColor" red="0.97254901959999995" green="0.60392156860000001" blue="0.074509803920000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="OVt-HS-0qy"/>
+                                            <constraint firstAttribute="width" constant="50" id="t3f-vt-cyr"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="185" id="Yhk-yw-zTn"/>
+                                    <constraint firstAttribute="width" constant="250" id="fKi-QS-ouK"/>
+                                    <constraint firstItem="mte-0F-yH6" firstAttribute="centerX" secondItem="IJQ-gA-xr8" secondAttribute="centerX" id="hKM-LQ-MBo"/>
+                                    <constraint firstItem="mte-0F-yH6" firstAttribute="centerY" secondItem="IJQ-gA-xr8" secondAttribute="centerY" constant="-12.5" id="rAW-AW-Ypp"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="IJQ-gA-xr8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="191-oF-1N6"/>
+                            <constraint firstItem="IJQ-gA-xr8" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="FSG-6A-uvr"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="bgView" destination="IJQ-gA-xr8" id="MTd-P4-pBr"/>
+                        <outlet property="dragView" destination="mte-0F-yH6" id="gLS-Hh-AEx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-938.39999999999998" y="-88.605697151424295"/>
+        </scene>
+    </scenes>
+</document>
