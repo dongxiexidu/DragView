@@ -24,13 +24,13 @@
 
 4、回调block
 
-	点击的回调		clickDragViewBlock
+      点击的回调:clickDragViewBlock
 	
-	开始拖动的回调	beginDragBlock
+	开始拖动的回调:beginDragBlock
 	
-	拖动中回调		duringDragBlock
+	拖动中回调:duringDragBlock
 	
-	结束拖动的回调 	endDragBlock
+	结束拖动的回调:endDragBlock
 	
 5、isKeepBounds是不是又自动黏贴边界效果
 
@@ -41,4 +41,4 @@
 
 7、可以自定义view加到dragView中，比如一个视频，一个自定义按钮等等。
 
-声明本文参考了:Objective-C版本,并在原文上添加了一些属性和功能[WMDragView](https://github.com/zhengwenming/WMDragView)
+声明:本文参考了Objective-C版本,并在原文上添加了一些属性和功能[WMDragView](https://github.com/zhengwenming/WMDragView)
