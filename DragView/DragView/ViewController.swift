@@ -16,6 +16,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dragView.hasNavagation = false
+        dragView.forbidenEnterStatusBar = true
+        dragView.fatherIsController = true
+        
         dragView.clickDragViewBlock = { dragV in
             print("clickDragView-\(dragV)")
         }
@@ -25,10 +29,11 @@ class ViewController: UIViewController {
         dragView.beginDragBlock = { dragV in
             print("beginDrag-\(dragV)")
         }
+
     }
 
     override func viewDidLayoutSubviews() {
-        // bgView 和 dragView是同级关系
+
       //  dragView.freeRect = self.bgView.frame
     }
     

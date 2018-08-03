@@ -8,11 +8,16 @@
 
 import UIKit
 
-enum DragDirection {
-    case any
+public enum DragDirection : Int{
+    case any = 0
     case horizontal
     case vertical
 }
+let kScreenH = UIScreen.main.bounds.height
+let isIphoneX : Bool = kScreenH == 812.0 ? true : false
+let kStatusBarH : CGFloat = isIphoneX == true ? 44 : 20
+let kSafeBottomH : CGFloat = isIphoneX == true ? 34 : 0
+let kNavBarH :CGFloat = isIphoneX ? 88 : 64
 
 @IBDesignable
 class DragView: UIView {
@@ -32,19 +37,30 @@ class DragView: UIView {
     /// 拖曳的方向，默认为any，任意方向
     var dragDirection : DragDirection = DragDirection.any
      
-    
-    var isKeepBounds_ : Bool = false
+
     /**
      是不是总保持在父视图边界，默认为NO,没有黏贴边界效果
      isKeepBounds = YES，它将自动黏贴边界，而且是最近的边界
      isKeepBounds = NO， 它将不会黏贴在边界，它是free(自由)状态，跟随手指到任意位置，但是也不可以拖出给定的范围frame
      */
     @IBInspectable
-    var isKeepBounds : Bool = false {
-        didSet{
-            isKeepBounds_ = isKeepBounds
-        }
-    }
+    var isKeepBounds : Bool = false
+    
+    /// 是否可以拖出父类Rect
+    @IBInspectable
+    var forbidenOutFree : Bool = true
+    
+    /// 父类是否是有导航栏,如果有禁止进入导航栏
+    @IBInspectable
+    var hasNavagation : Bool = true
+    
+    /// 顶部禁止进入状态栏
+    @IBInspectable
+    var forbidenEnterStatusBar : Bool = false
+    
+    /// 父类是否是UIViewController
+    @IBInspectable
+    var fatherIsController : Bool = false
     
     /**
      contentView内部懒加载的一个UIImageView
@@ -94,6 +110,9 @@ class DragView: UIView {
     private var startPoint : CGPoint = CGPoint.zero
     private var panGestureRecognizer : UIPanGestureRecognizer!
     
+    /// 禁止拖出父控件动画时长
+    private var endaAimationTime : TimeInterval = 0.2
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -109,14 +128,9 @@ class DragView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-//        if freeRect.origin.x != 0 || freeRect.origin.y != 0 || freeRect.size.height != 0 || freeRect.size.width != 0 {
-//            //设置了freeRect--活动范围
-//        } else { //没有设置freeRect--活动范围，则设置默认的活动范围为父视图的frame
-//            if let superview = self.superview {
-//                freeRect = CGRect.init(origin: CGPoint.zero, size: superview.bounds.size)
-//            }
-//        }
+        if let superview = self.superview {
+            freeRect = CGRect.init(origin: CGPoint.zero, size: superview.bounds.size)
+        }
         contentViewForDrag.frame = CGRect.init(origin: CGPoint.zero, size: self.bounds.size)
         button.frame = CGRect.init(origin: CGPoint.zero, size: self.bounds.size)
         imageView.frame = CGRect.init(origin: CGPoint.zero, size: self.bounds.size)
@@ -164,6 +178,56 @@ class DragView: UIView {
             if let duringDragBlock = duringDragBlock {
                 duringDragBlock(self)
             }
+            
+            // 禁止拖动到父类之外区域
+            if forbidenOutFree == true && (frame.origin.x < 0 || frame.origin.x > freeRect.size.width - frame.size.width || frame.origin.y < 0 || frame.origin.y > freeRect.size.height - frame.size.height){
+                var newframe : CGRect = self.frame
+                if frame.origin.x < 0 {
+                    newframe.origin.x = 0
+                }else if frame.origin.x > freeRect.size.width - frame.size.width {
+                    newframe.origin.x = freeRect.size.width - frame.size.width
+                }
+                if frame.origin.y < 0 {
+                    newframe.origin.y = 0
+                }else if frame.origin.y > freeRect.size.height - frame.size.height{
+                    newframe.origin.y = freeRect.size.height - frame.size.height
+                }
+                
+                UIView.animate(withDuration: endaAimationTime) {
+                    self.frame = newframe
+                }
+                return
+            }
+            
+            // 如果父类是控制器View 禁止进入状态栏
+            if fatherIsController && forbidenEnterStatusBar && frame.origin.y < kStatusBarH {
+                var newframe : CGRect = self.frame
+                newframe.origin.y = kStatusBarH
+                UIView.animate(withDuration: endaAimationTime) {
+                    self.frame = newframe
+                }
+                return
+            }
+            // 如果父类是控制器View
+            if fatherIsController && frame.origin.y > freeRect.size.height - frame.size.height - kSafeBottomH {
+                var newframe : CGRect = self.frame
+                newframe.origin.y = freeRect.size.height - frame.size.height - kSafeBottomH
+                UIView.animate(withDuration: endaAimationTime) {
+                    self.frame = newframe
+                }
+            }
+            
+            // 如果父类是控制器View 禁止进入导航栏
+            if fatherIsController && hasNavagation && frame.origin.y < kNavBarH{
+                var newframe : CGRect = self.frame
+                newframe.origin.y = kNavBarH
+                UIView.animate(withDuration: endaAimationTime) {
+                    self.frame = newframe
+                }
+                return
+            }
+            
+            
             let point : CGPoint = pan.translation(in: self)
             var dx : CGFloat = 0.0
             var dy : CGFloat = 0.0
@@ -178,6 +242,7 @@ class DragView: UIView {
                 dx = 0
                 dy = point.y - startPoint.y
             }
+            
             // 计算移动后的view中心点
             let newCenter : CGPoint = CGPoint.init(x: center.x + dx, y: center.y + dy)
             // 移动view
@@ -201,7 +266,7 @@ class DragView: UIView {
         //中心点判断
         let centerX : CGFloat = freeRect.origin.x + (freeRect.size.width - frame.size.width)*0.5
         var rect : CGRect = self.frame
-        if isKeepBounds_ == false {//没有黏贴边界的效果
+        if isKeepBounds == false {//没有黏贴边界的效果
             if frame.origin.x < freeRect.origin.x {
 
                 UIView.beginAnimations(leftMove, context: nil)
@@ -219,7 +284,8 @@ class DragView: UIView {
                 self.frame = rect
                 UIView.commitAnimations()
             }
-        } else if isKeepBounds_ == true{//自动粘边
+
+        } else if isKeepBounds == true{//自动粘边
             if frame.origin.x < centerX {
                 
                 UIView.beginAnimations(leftMove, context: nil)
@@ -254,6 +320,7 @@ class DragView: UIView {
             self.frame = rect
             UIView.commitAnimations()
         }
+        
         
     }
     
