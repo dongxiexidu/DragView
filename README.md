@@ -12,7 +12,7 @@
 
 
 
-#DragView：用法和API
+# DragView：用法和API
 
 1、把需要拖曳view的父类从原本继承UIView，改成继承DragView就OK了。
 
