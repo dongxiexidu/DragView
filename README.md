@@ -16,9 +16,7 @@
 
 1、把需要拖曳view的父类从原本继承UIView，改成继承DragView就OK了。
 
-2、dragEnable = true，可拖曳
-
-   dragEnable = false，不可拖曳
+2、dragEnable = true，可拖曳 dragEnable = false，不可拖曳
    
 3、freeRect可以任意设置活动范围，默认为活动范围为父视图大小frame，
 
